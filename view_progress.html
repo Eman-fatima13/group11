@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>View Student Progress</title>
+  <style>
+    /* Use the same styling as your existing pages */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #ecf0f1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    header {
+      background: #0A1828;
+      color: #BFA181;
+      padding: 15px;
+      text-align: center;
+      font-size: 20px;
+      width: 100%;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      width: 1000px;
+      margin-top: 20px;
+    }
+    h2 {
+      text-align: left;
+      color: #0A1828;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background: #0A1828;
+      color: #BFA181;
+    }
+    tr:nth-child(even) {
+      background: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="C:\Users\searlco\Desktop\Front_end_SE\images\57ebdba0a0b36b5bc013bd84c69c0a2c.jpg" alt="School Logo" style="margin-left: 45px; margin-top: -10px;" />
+    View Student Progress
+  </header>
+  <div class="container">
+    <h2>Student Progress</h2>
+    <form action="view_progress.php" method="POST">
+      <label for="studentID">Student ID</label>
+      <input type="number" id="studentID" name="studentID" required>
+      <button type="submit">View Progress</button>
+    </form>
+
+    <!-- Display Grades and Attendance -->
+    <h3>Grades</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Course</th>
+          <th>Assignment Marks</th>
+          <th>Quiz Marks</th>
+          <th>Exam Marks</th>
+          <th>Final Grade</th>
+        </tr>
+      </thead>
+      <tbody id="gradesTable">
+        <!-- Grades will be populated here -->
+      </tbody>
+    </table>
+
+    <h3>Attendance</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="attendanceTable">
+        <!-- Attendance will be populated here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    // Fetch and display grades and attendance
+    document.querySelector('form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const studentID = document.getElementById('studentID').value;
+
+      // Fetch grades
+      const gradesResponse = await fetch(`get_grades.php?studentID=${studentID}`);
+      const grades = await gradesResponse.json();
+      const gradesTable = document.getElementById('gradesTable');
+      gradesTable.innerHTML = grades.map(grade => `
+        <tr>
+          <td>${grade.courseName}</td>
+          <td>${grade.assignmentMarks}</td>
+          <td>${grade.quizMarks}</td>
+          <td>${grade.examMarks}</td>
+          <td>${(grade.assignmentMarks * 0.3 + grade.quizMarks * 0.2 + grade.examMarks * 0.5).toFixed(2)}</td>
+        </tr>
+      `).join('');
+
+      // Fetch attendance
+      const attendanceResponse = await fetch(`get_attendance.php?studentID=${studentID}`);
+      const attendance = await attendanceResponse.json();
+      const attendanceTable = document.getElementById('attendanceTable');
+      attendanceTable.innerHTML = attendance.map(record => `
+        <tr>
+          <td>${record.date}</td>
+          <td>${record.status}</td>
+        </tr>
+      `).join('');
+    });
+  </script>
+</body>
+</html>

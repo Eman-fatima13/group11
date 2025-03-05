@@ -1,0 +1,191 @@
+/* General Styles */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f9; /* Light background */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header (Top Navbar) */
+header {
+  background: linear-gradient(135deg, #0A1828, #002349); /* Blue Gradient */
+  color: #BFA181 ;
+  padding: 20px;
+  height: 50px;
+  text-align: center;
+  width: 100%;
+  font-size: 22px;
+  font-weight: bold;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+}
+
+/* Layout */
+.container {
+  display: flex;
+  flex-direction: row; /* Sidebar on left, content on right */
+  width: 100%;
+  margin-top: 80px; /* Space for navbar */
+}
+
+/* Sidebar (Fixed on Left Side) */
+.sidebar {
+  width: 250px;
+  height: calc(81.6vh - 80px); /* Full height minus navbar */
+  background: #0A1828; /* Dark Sidebar */
+  color:  #BFA181;
+  padding-top: 20px;
+  box-shadow: 2px 0px 10px rgba(0, 0, 0, 0.2);
+  position: fixed;
+  left: 0;
+  top: 80px; /* Below navbar */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 16%;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  width: 100%;
+}
+
+.sidebar ul li {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+  color:  #BFA181;
+  text-decoration: none;
+  font-size: 16px;
+  padding: 12px;
+  display: block;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+.sidebar ul li a:hover {
+  background: #002349;
+}
+
+/* Main Content (Push Right Due to Sidebar) */
+.welcome-page {
+  margin-left: 270px; /* Offset for sidebar */
+  padding: 40px;
+  text-align: center;
+  width: calc(100% - 270px);
+}
+
+/* Role Selection */
+.role-selection {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 30px;
+}
+
+/* Circular Role Card */
+.role-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-decoration: none;
+  color: black;
+  font-weight: bold;
+  text-align: center;
+  position: relative;
+}
+
+/* Circular Design with Border */
+.circle {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  border: 8px solid transparent; /* Adjusted thickness */
+}
+
+/* Animated Border Colors */
+.circle::before {
+  content: "";
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  top: -10px;
+  left: -10px;
+  z-index: -1;
+  animation: rotateBorder 3s linear infinite;
+  border: 5px solid rgba(255, 255, 255, 0.3); /* Thinner Outline */
+}
+
+/* Border Colors for Each Role */
+.student .circle::before {
+  background: conic-gradient(#006400, #556B2F, #8FBC8F);
+}
+
+.teacher .circle::before {
+  background: conic-gradient(#ff5733, #ff3300, #ff5733);
+}
+
+.admin .circle::before {
+  background: conic-gradient(#ffcc00, #ff9800, #ffcc00);
+}
+
+/* Rotating Animation */
+@keyframes rotateBorder {
+  0% {
+    transform: rotate(0deg);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+  }
+  50% {
+    transform: rotate(180deg);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 1);
+  }
+  100% {
+    transform: rotate(360deg);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+  }
+}
+
+/* Hover Effect */
+.circle:hover {
+  transform: scale(1.05);
+  transition: transform 0.3s ease-in-out;
+}
+
+/* Image Inside Circle */
+.circle img {
+  width: 70px;
+  height: 70px;
+  mix-blend-mode: multiply;
+}
+
+/* Role Text */
+.role-card span {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* Footer (Bottom) */
+footer {
+  text-align: center;
+  padding: 15px;
+  background: linear-gradient(135deg, #0A1828, #002349);
+  color:  #BFA181;
+  margin-top: 50px;
+  width: 100%;
+}

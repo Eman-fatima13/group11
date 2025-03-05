@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Communication</title>
+  <style>
+    /* Use the same styling as your existing pages */
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #ecf0f1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    header {
+      background: #0A1828;
+      color: #BFA181;
+      padding: 15px;
+      text-align: center;
+      font-size: 20px;
+      width: 100%;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+      width: 1000px;
+      margin-top: 20px;
+    }
+    h2 {
+      text-align: left;
+      color: #0A1828;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin: 10px 0 5px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+    button {
+      width: 100%;
+      background: #0A1828;
+      color: #BFA181;
+      border: none;
+      padding: 12px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 18px;
+      margin-top: 20px;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .messages {
+      margin-top: 20px;
+    }
+    .message {
+      background: #f9f9f9;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      margin-bottom: 10px;
+    }
+    .message .sender {
+      font-weight: bold;
+      color: #0A1828;
+    }
+    .message .timestamp {
+      font-size: 12px;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <img src="C:\Users\searlco\Desktop\Front_end_SE\images\57ebdba0a0b36b5bc013bd84c69c0a2c.jpg" alt="School Logo" style="margin-left: 45px; margin-top: -10px;" />
+    Communication
+  </header>
+  <div class="container">
+    <h2>Send Message</h2>
+    <form id="sendMessageForm">
+      <label for="receiverID">Receiver ID</label>
+      <input type="number" id="receiverID" name="receiverID" required>
+
+      <label for="messageText">Message</label>
+      <textarea id="messageText" name="messageText" rows="4" required></textarea>
+
+      <button type="submit">Send Message</button>
+    </form>
+
+    <h2>Received Messages</h2>
+    <div class="messages" id="messages">
+      <!-- Messages will be populated here -->
+    </div>
+  </div>
+
+  <script>
+    // Fetch and display messages
+    async function fetchMessages() {
+      const response = await fetch('get_messages.php');
+      const messages = await response.json();
+      const messagesContainer = document.getElementById('messages');
+      messagesContainer.innerHTML = messages.map(message => `
+        <div class="message">
+          <div class="sender">From: ${message.sender}</div>
+          <div class="timestamp">${message.timestamp}</div>
+          <p>${message.messageText}</p>
+        </div>
+      `).join('');
+    }
+
+    // Send message
+    document.getElementById('sendMessageForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const receiverID = document.getElementById('receiverID').value;
+      const messageText = document.getElementById('messageText').value;
+
+      const response = await fetch('send_message.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ receiverID, messageText }),
+      });
+
+      if (response.ok) {
+        alert('Message sent successfully!');
+        document.getElementById('sendMessageForm').reset();
+        fetchMessages(); // Refresh messages
+      } else {
+        alert('Failed to send message.');
+      }
+    });
+
+    // Fetch messages on page load
+    fetchMessages();
+  </script>
+</body>
+</html>
