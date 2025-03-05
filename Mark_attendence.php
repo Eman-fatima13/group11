@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mark Attendance</title>
   <style>
-   
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -75,7 +74,7 @@
     .submit-btn:hover {
       background: #0056b3;
     }
-   img {
+    img {
       width: 40px;
       height: 40px;
       border-radius: 50%;
@@ -83,7 +82,7 @@
       left: 20px;
       margin-top: 20px;
     }
-    </style>
+  </style>
 </head>
 <body>
   <header style="color:#BFA181">
@@ -108,16 +107,16 @@
 
         if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
-                echo `
+                echo "
                 <tr>
                   <td>{$row['studentID']}</td>
                   <td>{$row['name']}</td>
-                  <td class="radio-group">
-                    <label><input type="radio" name="attendance[{$row['studentID']}]" value="present" required> Present</label>
-                    <label><input type="radio" name="attendance[{$row['studentID']}]" value="absent"> Absent</label>
+                  <td class='radio-group'>
+                    <label><input type='radio' name='attendance[{$row['studentID']}]' value='present' required> Present</label>
+                    <label><input type='radio' name='attendance[{$row['studentID']}]' value='absent'> Absent</label>
                   </td>
                 </tr>
-                `;
+                ";
             }
         } else {
             echo "<tr><td colspan='3'>No students registered.</td></tr>";

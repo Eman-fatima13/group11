@@ -3,9 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mark Attendance</title>
+  <title>Input Grades</title>
   <style>
-   
     body {
       margin: 0;
       font-family: Arial, sans-serif;
@@ -56,11 +55,6 @@
     tr:nth-child(odd) {
       background: white;
     }
-    .radio-group {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-    }
     .submit-btn {
       width: 100%;
       background: #0A1828;
@@ -75,7 +69,7 @@
     .submit-btn:hover {
       background: #0056b3;
     }
-   img {
+    img {
       width: 40px;
       height: 40px;
       border-radius: 50%;
@@ -83,50 +77,64 @@
       left: 20px;
       margin-top: 20px;
     }
-    </style>
+  </style>
 </head>
 <body>
   <header style="color:#BFA181">
     <img src="https://i.pinimg.com/474x/57/eb/db/57ebdba0a0b36b5bc013bd84c69c0a2c.jpg" alt="School Logo" />
-    Mark Student Attendance
+    Input Grades
   </header>
   <div class="container">
-    <h2>Student Attendance</h2>
-    <form action="submit_attendance.php" method="POST">
+    <h2>Input Grades</h2>
+    <form action="submit_grades.php" method="POST">
+      <label for="course">Select Course:</label>
+      <select id="course" name="course" required>
+        <option value="1">Fundamental Programming</option>
+        <option value="2">Data Structures</option>
+        <option value="3">Object-Oriented Programming</option>
+      </select>
       <table>
         <tr>
-          <th style="color:#BFA181">#</th>
-          <th style="color:#BFA181;">Student Name</th>
-          <th style="color:#BFA181">Attendance</th>
+          <th>#</th>
+          <th>Student Name</th>
+          <th>Assignment Marks</th>
+          <th>Quiz Marks</th>
+          <th>Exam Marks</th>
         </tr>
         <?php
         include 'config.php';
 
-        // Fetch all registered students from the database
-        $query = "SELECT studentID, name FROM students";
-        $result = $conn->query($query);
+        // Fetch all students for the selected course
+        if (isset($_POST['course'])) {
+            $courseID = $_POST['course'];
+            $query = "SELECT students.studentID, students.name 
+                      FROM students 
+                      WHERE students.course = ?";
+            $stmt = $conn->prepare($query);
+            $stmt->bind_param("i", $courseID);
+            $stmt->execute();
+            $result = $stmt->get_result();
 
-        if ($result->num_rows > 0) {
-            while ($row = $result->fetch_assoc()) {
-                echo `
-                <tr>
-                  <td>{$row['studentID']}</td>
-                  <td>{$row['name']}</td>
-                  <td class="radio-group">
-                    <label><input type="radio" name="attendance[{$row['studentID']}]" value="present" required> Present</label>
-                    <label><input type="radio" name="attendance[{$row['studentID']}]" value="absent"> Absent</label>
-                  </td>
-                </tr>
-                `;
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo "
+                    <tr>
+                      <td>{$row['studentID']}</td>
+                      <td>{$row['name']}</td>
+                      <td><input type='number' name='assignmentMarks[{$row['studentID']}]' step='0.01' required></td>
+                      <td><input type='number' name='quizMarks[{$row['studentID']}]' step='0.01' required></td>
+                      <td><input type='number' name='examMarks[{$row['studentID']}]' step='0.01' required></td>
+                    </tr>
+                    ";
+                }
+            } else {
+                echo "<tr><td colspan='5'>No students registered for this course.</td></tr>";
             }
-        } else {
-            echo "<tr><td colspan='3'>No students registered.</td></tr>";
         }
-
         $conn->close();
         ?>
       </table>
-      <button type="submit" name="submit-btn" class="submit-btn">Submit Attendance</button>
+      <button type="submit" name="submit-btn" class="submit-btn">Submit Grades</button>
     </form>
   </div>
 </body>
